@@ -36,3 +36,4 @@ const manager = new ProductManager();
 
 manager.addProduct("Elden Ring", "Action RPG", 229, "default.jpeg", 1245620, "digital");
 manager.addProduct("FFXIV", "MMORPG", 52, "header.jpeg", 39210, "digital");
+console.log(manager.products)
