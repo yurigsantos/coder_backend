@@ -4,23 +4,14 @@ class ProductManager {
     id = 0;
     #products;
     #path;
-    //#toRead;
-    //#toWrite;
+
     constructor() {
         this.#products = [],
         this.#path = "./data/products.json"
-        /*this.#toRead = () => {
-            let file = fs.readFileSync(this.#path, "utf-8");
-            const fileParsed = JSON.parse(file);
-            return fileParsed;
-        },
-        this.#toWrite = (data) => {
-            const file = JSON.stringify(data);
-            fs.writeFileSync(this.#path, file);
-        }*/
-    };
+    }
 
     addProduct = (title, description, price, thumbnail, code, stock) => { //recebe um objeto e adiciona na array
+
         const product = {
             id: this.id++,
             title,
@@ -36,10 +27,9 @@ class ProductManager {
     };
 
     getProducts = () => { //deve ler o arquivo e voltar todos da array
-        let file = fs.readFileSync(this.#path, "utf-8");
-        const fileParsed = JSON.parse(file);
-        console.log(fileParsed);
-        return fileParsed
+        let consult = fs.readFileSync(this.#path, "utf-8");
+        console.log(consult);
+        return consult;
     };
 
     getProductById = (id) => { //recebe id, faz leitura e volta o objeto
@@ -51,7 +41,7 @@ class ProductManager {
         } else {
             console.log(index);
             return index;
-        }
+        };
     };
 };
 
