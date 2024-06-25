@@ -1,19 +1,28 @@
 const fs = require("fs");
 
 class ProductManager {
+    id = 0;
     #products;
-    #id = 0;
     #path;
+    //#toRead;
+    //#toWrite;
     constructor() {
         this.#products = [],
         this.#path = "./data/products.json"
+        /*this.#toRead = () => {
+            let file = fs.readFileSync(this.#path, "utf-8");
+            const fileParsed = JSON.parse(file);
+            return fileParsed;
+        },
+        this.#toWrite = (data) => {
+            const file = JSON.stringify(data);
+            fs.writeFileSync(this.#path, file);
+        }*/
     };
 
     addProduct = (title, description, price, thumbnail, code, stock) => { //recebe um objeto e adiciona na array
-        this.#id = this.#id + 1;
-
         const product = {
-            id: this.#id,
+            id: this.id++,
             title,
             description,
             price,
@@ -28,8 +37,9 @@ class ProductManager {
 
     getProducts = () => { //deve ler o arquivo e voltar todos da array
         let file = fs.readFileSync(this.#path, "utf-8");
-        console.log(file);
-        return file;
+        const fileParsed = JSON.parse(file);
+        console.log(fileParsed);
+        return fileParsed
     };
 
     getProductById = (id) => { //recebe id, faz leitura e volta o objeto
@@ -41,16 +51,8 @@ class ProductManager {
         } else {
             console.log(index);
             return index;
-        };
+        }
     };
-/*
-    updateProduct = (id, update) => {
-
-    };
-    
-    deleteProduct = (id) => {
-        
-    };*/
 };
 
 const manager = new ProductManager();
@@ -61,5 +63,3 @@ manager.addProduct("Hollow Knight", "Metroidvania", 46, "cover.jpeg", 367520, "d
 manager.getProducts();
 manager.getProductById(1);
 manager.getProductById(5);
-//manager.deleteProduct(3);
-manager.getProducts();
