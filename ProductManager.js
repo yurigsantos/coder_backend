@@ -6,26 +6,26 @@ class ProductManager {
     #path;
 
     constructor() {
-        this.#products = [],
+        this.#products = new Array();
         this.#path = "./products.json"
     }
 
-    #toWrite = (data) => {
+    #toWrite = async (data) => {
         const file = JSON.stringify(data);
-        fs.writeFileSync(this.#path, file);
+        await fs.promises.writeFile(this.#path, file);
     };
 
-    #toRead = () => {
-        let reading = fs.readFileSync(this.#path, "utf-8");
+    #toRead = async () => {
+        let reading = await fs.promises.readFile(this.#path, "utf-8");
         const read = JSON.parse(reading);
         return read;
     };
 
-    addProduct = (title, description, price, thumbnail, code, stock) => {
-        this.id = this.id +1;
+    addProduct = async (title, description, price, thumbnail, code, stock) => {
+        //this.#products = await this.#toRead();
 
         const product = {
-            id: this.id,
+            id: this.id += 1,
             title,
             description,
             price,
@@ -34,27 +34,27 @@ class ProductManager {
             stock
         };
         this.#products.push(product);
-        this.#toWrite(this.#products);     
+        await this.#toWrite(this.#products);     
     };
 
-    getProducts = () => {
-        this.#products = this.#toRead();
-        console.log(this.#products);
+    getProducts = async () => {
+        this.#products = await this.#toRead();
+        return this.#products;
     };
 
-    getProductById = (id) => {
-        this.#products = this.#toRead();
+    getProductById = async (id) => {
+        this.#products = await this.#toRead();
         const index = this.#products.find((product) => product.id === id);
 
-        if (index === undefined) {
-            console.log("Não encontrado");
+        if (index) {
+            return index;
         } else {
-            console.log(index);
+            return "Não encontrado";
         };
     };
 
-    updateProduct = (id, title, description, price, thumbnail, code, stock) => {
-        this.#products = this.#toRead();
+    updateProduct = async (id, title, description, price, thumbnail, code, stock) => {
+        this.#products = await this.#toRead();
         const index = this.#products.find((product) => product.id === id);
         if (index) {
                 index.title = title;
@@ -64,26 +64,29 @@ class ProductManager {
                 index.code = code;
                 index.stock = stock;
             };
-        this.#toWrite(this.#products);
+        await this.#toWrite(this.#products);
     };
 
-    deleteProduct = (id) => {
-        this.#products = this.#toRead();
+    deleteProduct = async (id) => {
+        this.#products = await this.#toRead();
         const index = this.#products.findIndex((product) => product.id === id);
         this.#products.splice(index, 1);
-        this.#toWrite(this.#products);
+        await this.#toWrite(this.#products);
     };
 };
 
-const manager = new ProductManager();
+main = async () => {
+    const manager = new ProductManager();
+    
+    manager.addProduct("Elden Ring", "Action RPG", 229, "default.jpeg", 1245620, "digital");
+    manager.addProduct("FFXIV", "MMORPG", 52, "header.jpeg", 39210, "digital");
+    manager.addProduct("Hollow Knight", "Metroidvania", 46, "cover.jpeg", 367520, "digital");
+    console.log(await manager.getProducts());
+    console.log(await manager.getProductById(1));
+    console.log(await manager.getProductById(5));
+    await manager.deleteProduct(3);
+    await manager.updateProduct(2, "Dawntrail", "MMORPG", 105, "header.jpeg", 2649240, "digital");
+    console.log(await manager.getProducts());
+};
 
-manager.addProduct("Elden Ring", "Action RPG", 229, "default.jpeg", 1245620, "digital");
-manager.addProduct("FFXIV", "MMORPG", 52, "header.jpeg", 39210, "digital");
-manager.addProduct("Hollow Knight", "Metroidvania", 46, "cover.jpeg", 367520, "digital");
-manager.getProducts();
-manager.getProductById(1);
-manager.getProductById(5);
-manager.deleteProduct(3);
-manager.getProducts();
-manager.updateProduct(2, "Dawntrail", "MMORPG", 105, "header.jpeg", 2649240, "digital");
-manager.getProducts();
+main()
